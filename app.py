@@ -286,7 +286,7 @@ def add_member():
 @app.route('/new_loan',methods=['GET', 'POST'])
 def new_loan():
     cursor=create_cursor()
-    books=cursor.execute(f"SELECT title,id FROM books").fetchall()
+    books=cursor.execute(f"SELECT title,id FROM books WHERE books.quantity>0").fetchall()
     members=cursor.execute(f"SELECT first_name,last_name,id FROM members").fetchall()
 
     if request.method == 'POST':
@@ -295,7 +295,8 @@ def new_loan():
         due_date= request.form.get('due_date')
         cursor.execute(f"""INSERT INTO loans (book_id,member_id,loan_date,due_date)
                VALUES ('{book_id}','{member_id}',CONVERT(date, GETDATE()), CAST ('{due_date}' AS DATE))""")
-
+        cursor.connection.commit()
+        cursor.execute(f"UPDATE books SET quantity = quantity - 1 WHERE id = {book_id};")
         cursor.connection.commit()
         return redirect('/loans') 
 
