@@ -45,11 +45,22 @@
                 </tr>
             </thead>
             <tbody>
-                {% for row in loans %}
+                {% for loan in loans %}
                 <tr>
-                    {% for value in row %}
-                    <td>{{ value }}</td>
-                    {% endfor %}
+                    <td>{{loan[0]}}</td>
+                    <td>{{loan[1]}}</td>
+                    <td>{{loan[2]}}</td>
+                    <td>{{loan[3]}}</td>
+                    <td>{{loan[4]}}</td>
+                    <td>{{loan[5]}}</td>
+                    {% if loan[6] %}
+                    <td>{{loan[6]}}</td>
+                    <td style="background-color: greenyellow;">bargasht</td>
+                    {% else %}
+                    <td><button onclick="Return('{{loan[0]}},{{book[0]}},{{loan[1]}}')">Return</button></td>
+                    {% if loan[5] < today %} <td style="background-color: red;">gozasht</td>
+                        {% endif %}
+                        {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
@@ -64,17 +75,32 @@
             if (confirm("Are you sure to delete?")) {
                 $.ajax({
                     url: '/delete_book',
-                    data: {id: '{{ book[0] }}'},
+                    data: { id: '{{ book[0] }}' },
                     type: 'POST',
-                    success: function(response) {
+                    success: function (response) {
                         alert('Book deleted successfully');
                         window.location.href = '/books';
                     }
                 });
             }
         }
-        </script>
-        
+
+
+        function Return(loan_id, book_id, member_id) {
+            if (confirm("Are you sure to Return Book?")) {
+                $.ajax({
+                    url: '/return_loan',
+                    data: { loan_id: loan_id, book_id: book_id, member_id: member_id },
+                    type: 'POST',
+                    success: function (response) {
+                        alert('Book Returned');
+                        location.reload();
+                    }
+                });
+            }
+        }
+    </script>
+
 </body>
 
 </html>

@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from database import create_cursor
 from flask import Flask, request, render_template , redirect ,flash
+import datetime
 import logging
 
 app = Flask(__name__)
@@ -42,6 +43,7 @@ def members():
 ##########################################################################################
 @app.route('/profile/<int:user_id>')
 def profile(user_id):
+    today=datetime.date.today();
     cursor=create_cursor()
     cursor.execute("SELECT * FROM members WHERE id=?", (user_id,))
     user = cursor.fetchone()
@@ -56,7 +58,7 @@ def profile(user_id):
                 WHERE 
                     loans.member_id=?;""", (user_id,) )
     loans = cursor.fetchall()
-    return render_template('profile.html', user=user, numbers=numbers, loans=loans)
+    return render_template('profile.html', user=user, numbers=numbers, loans=loans, today=today)
 ##########################################################################################
 @app.route('/delete_profile', methods=['POST'])
 def delete_profile():
@@ -124,6 +126,7 @@ def books():
 @app.route('/book/<int:book_id>', methods=['GET', 'POST'])
 def book(book_id):
     result=""
+    today=datetime.date.today();
     if request.method == 'POST':
         result = request.form.get('delete')    
     cursor=create_cursor()
@@ -170,7 +173,7 @@ def book(book_id):
                 WHERE 
                     loans.book_id=?;""", (book_id,) )
     loans = cursor.fetchall()
-    return render_template('book.html', book=book , loans=loans )
+    return render_template('book.html', book=book , loans=loans , today=today )
 ##########################################################################################
 @app.route('/delete_book', methods=['POST'])
 def delete_book():
@@ -196,7 +199,6 @@ def add_book():
         corridor=request.form.get('corridor')
         shelf=request.form.get('shelf')
         quantity=request.form.get('quantity')
-        print("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv",authors)
 
         ispublisher=cursor.execute(f"SELECT COUNT(*) FROM publishers WHERE publishers.name='{publisher}'").fetchone()
         if ispublisher[0]==0:
@@ -234,6 +236,7 @@ def add_book():
 @app.route('/loans', methods=['GET', 'POST'])
 def loans():
     order='id';
+    today=datetime.date.today();
     if request.method == 'POST':
         order = request.form.get('orderby') 
     query_string=f"""SELECT 
@@ -245,7 +248,7 @@ def loans():
     cursor=create_cursor();
     cursor.execute(query_string)
     rows = cursor.fetchall()
-    return render_template('loans.html', rows=rows , order=order)
+    return render_template('loans.html', rows=rows , order=order , today=today)
 ##########################################################################################
 @app.route('/add_member',methods=['GET', 'POST'] )
 def add_member():
@@ -303,6 +306,19 @@ def new_loan():
     return render_template('new_loan.html' , books=books , members=members)
 
 ##########################################################################################
+@app.route('/return_loan', methods=['POST'])
+def return_loan():
+    
+    if request.method == 'POST':
+        loan_id, book_id, member_id = map(int, request.form['loan_id'].split(','))
+        print(loan_id,book_id,member_id)
+        cursor = create_cursor()
+        cursor.execute(f"UPDATE loans SET return_date = CONVERT(date, GETDATE()) WHERE id={loan_id}")
+        cursor.connection.commit()
+        cursor.execute(f"UPDATE books SET quantity = quantity + 1 WHERE id = {book_id};")
+        cursor.connection.commit()
+    
+    return redirect(f'/profile/{member_id}')
 ##########################################################################################
 ##########################################################################################
 ##########################################################################################

@@ -30,7 +30,7 @@
         <button onclick="confirmDelete()">delete</button>
         <button value="edit">edit</button>
     </div>
-    
+
     <div>
         {% if loans %}
         <label for="members_table">loans</label>
@@ -47,11 +47,21 @@
                 </tr>
             </thead>
             <tbody>
-                {% for row in loans %}
+                {% for loan in loans %}
                 <tr>
-                    {% for value in row %}
-                    <td>{{ value }}</td>
-                    {% endfor %}
+                    <td>{{loan[0]}}</td>
+                    <td>{{loan[1]}}</td>
+                    <td>{{loan[2]}}</td>
+                    <td>{{loan[3]}}</td>
+                    <td>{{loan[4]}}</td>
+                    {% if loan[5] %}
+                    <td>{{loan[5]}}</td>
+                    <td style="background-color: greenyellow;">bargasht</td>
+                    {% else %}
+                    <td><button onclick="Return('{{loan[0]}},{{loan[1]}},{{user[0]}}')">Return</button></td>
+                    {% if loan[4] < today %} <td style="background-color: red;">gozasht</td>
+                        {% endif %}
+                        {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
@@ -66,19 +76,32 @@
     <script>
         function confirmDelete() {
             if (confirm("Are you sure to delete?")) {
-                console.log("dellllllllllllll")
                 $.ajax({
                     url: '/delete_profile',
-                    data: {id: '{{ user[0] }}'},
+                    data: { id: '{{ user[0] }}' },
                     type: 'POST',
-                    success: function(response) {
+                    success: function (response) {
                         alert('Profile deleted successfully');
-                console.log("ssssssssssssss")
                         window.location.href = '/members';
                     }
                 });
             }
         }
-        </script>
+
+        function Return(loan_id, book_id, member_id) {
+            if (confirm("Are you sure to Return Book?")) {
+                $.ajax({
+                    url: '/return_loan',
+                    data: { loan_id: loan_id, book_id: book_id, member_id: member_id },
+                    type: 'POST',
+                    success: function (response) {
+                        alert('Book Returned');
+                        location.reload();
+                    }
+                });
+            }
+        }
+    </script>
 </body>
+
 </html>

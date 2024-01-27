@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Books</title>
+    <title>Loans</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
@@ -17,7 +17,7 @@
                 {%else%}
                 <option value="id">id</option>
                 {%endif%}
-                
+
                 {%if order=='loan_date'%}
                 <option value="loan_date" selected>loan_date</option>
                 {%else%}
@@ -63,11 +63,15 @@
                     <td><a href="/profile/{{ row.member_id }}" target="_blank">{{row[2]}}</a></td>
                     <td>{{row[3]}}</td>
                     <td>{{row[4]}}</td>
+                    {% if row[5] %}
                     <td>{{row[5]}}</td>
-                    <td></td>
-
-
-                    <!-- <td><a href="/book/{{ row.id }}">View Book</a></td> -->
+                    <td style="background-color: greenyellow;">bargasht</td>
+                    {% else %}
+                    <td><button onclick="Return('{{row[0]}},{{row[1]}},{{row[2]}}')">Return</button></td>
+                    {% if row[4] < today %}
+                     <td style="background-color: red;">gozasht</td>
+                    {% endif %}
+                    {% endif %}
                 </tr>
                 {% endfor %}
 
@@ -101,6 +105,23 @@
                 });
             });
         });
+
+
+
+
+        function Return(loan_id, book_id, member_id) {
+            if (confirm("Are you sure to Return Book?")) {
+                $.ajax({
+                    url: '/return_loan',
+                    data: { loan_id: loan_id, book_id: book_id, member_id: member_id },
+                    type: 'POST',
+                    success: function (response) {
+                        alert('Book Returned');
+                        location.reload();
+                    }
+                });
+            }
+        }
     </script>
 </body>
 
