@@ -46,7 +46,7 @@ def profile(user_id):
     cursor.execute("SELECT * FROM members WHERE id=?", (user_id,))
     user = cursor.fetchone()
     cursor.execute("SELECT phone_number FROM phone_numbers WHERE member_id=?", (user_id,))
-    numbers = cursor.fetchone()
+    numbers = cursor.fetchall()
     cursor.execute("""SELECT 
                     loans.id ,books.id, books.title, loans.loan_date, loans.due_date , loans.return_date
                 FROM 

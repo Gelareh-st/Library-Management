@@ -17,9 +17,10 @@
         <p>lastname: {{ user[2] }}</p>
         <p>code meli: {{ user[3] }}</p>
         <p>tarikh sabte nam: {{ user[4] }}</p>
+        <p>shomare:</p>
         {% if numbers %}
         {% for number in numbers %}
-        <p>shomare: {{ number }}</p>
+        <p> {{ number[0] }}</p>
         {% endfor %}
         {% endif %}
 
