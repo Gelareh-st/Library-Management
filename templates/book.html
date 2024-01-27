@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <title>Book Profile</title>
+</head>
+
+<body>
+    <div>
+        <h1>Book Profile</h1>
+        <p>ID: {{ book[0] }}</p>
+        <p>Title: {{ book[1] }}</p>
+        <p>Authors: {{ book[2] }}</p>
+        <p>Publisher: {{ book[3] }}</p>
+        <p>Volume: {{ book[4] }}</p>
+        <p>Publication Year: {{ book[5] }}</p>
+        <p>Category: {{ book[6] }}</p>
+        <p>Address: {{ book[7] }}</p>
+        <p>Quantity: {{ book[8] }}</p>
+    </div>
+
+    <div>
+        <button onclick="confirmDelete()">delete</button>
+        <button value="edit">edit</button>
+    </div>
+
+    <div>
+        {% if loans %}
+        <label for="members_table">loans</label>
+        <table id="members_table" border="1">
+            <thead>
+                <tr>
+                    <th>Loan ID</th>
+                    <th>Member</th>
+                    <th>First name</th>
+                    <th>Last Name</th>
+                    <th>Loan Date</th>
+                    <th>Due Date</th>
+                    <th>Return Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in loans %}
+                <tr>
+                    {% for value in row %}
+                    <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No loan.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        function confirmDelete() {
+            if (confirm("Are you sure to delete?")) {
+                $.ajax({
+                    url: '/delete_book',
+                    data: {id: '{{ book[0] }}'},
+                    type: 'POST',
+                    success: function(response) {
+                        alert('Book deleted successfully');
+                        window.location.href = '/books';
+                    }
+                });
+            }
+        }
+        </script>
+        
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+<!-- profile.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <title>User Profile</title>
+</head>
+
+<body>
+    <div>
+        <h1>User Profile</h1>
+        <p>ID: {{ user[0] }}</p>
+        <p>Name: {{ user[1] }}</p>
+        <p>lastname: {{ user[2] }}</p>
+        <p>code meli: {{ user[3] }}</p>
+        <p>tarikh sabte nam: {{ user[4] }}</p>
+        {% if numbers %}
+        {% for number in numbers %}
+        <p>shomare: {{ number }}</p>
+        {% endfor %}
+        {%endif%}
+
+    </div>
+
+    <div>
+        <button onclick="confirmDelete()">delete</button>
+        <button value="edit">edit</button>
+    </div>
+    
+    <div>
+        {% if loans %}
+        <label for="members_table">loans</label>
+        <table id="members_table" border="1">
+            <thead>
+                <tr>
+                    <th>Loan ID</th>
+                    <th>Book ID</th>
+                    <th>Book Title</th>
+                    <th>Loan Date</th>
+                    <th>Due Date</th>
+                    <th>Return Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in loans %}
+                <tr>
+                    {% for value in row %}
+                    <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No loan.</p>
+        {% endif %}
+    </div>
+
+
+
+    <script>
+        function confirmDelete() {
+            if (confirm("Are you sure to delete?")) {
+                console.log("dellllllllllllll")
+                $.ajax({
+                    url: '/delete_profile',
+                    data: {id: '{{ user[0] }}'},
+                    type: 'POST',
+                    success: function(response) {
+                        alert('Profile deleted successfully');
+                console.log("ssssssssssssss")
+                        window.location.href = '/members';
+                    }
+                });
+            }
+        }
+        </script>
+</body>
+</html>

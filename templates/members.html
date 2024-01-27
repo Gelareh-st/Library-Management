@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Members</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <div>
+        <form id="my-form" action="/members" method="post">
+            <select name="orderby" id="orderby">
+                {%if order=='id'%}
+                <option value="id" selected>id</option>
+                {%else%}
+                <option value="id">id</option>
+                {%endif%}
+                {%if order=='first_name'%}
+                <option value="first_name" selected>fname</option>
+                {%else%}
+                <option value="first_name">fname</option>
+                {%endif%}
+                {%if order=='last_name'%}
+                <option value="last_name" selected>lname</option>
+                {%else%}
+                <option value="last_name">lname</option>
+                {%endif%}
+                {%if order=='registration_date'%}
+                <option value="registration_date" selected>regdate</option>
+                {%else%}
+                <option value="registration_date">regdate</option>
+                {%endif%}
+            </select>
+            <input type="search" name="search" id="search" value="{{search}}" autofocus>
+        </form>
+    </div>
+
+    <div id="result">
+
+        {% if rows %}
+        <table id="members_table" border="1">
+            <thead>
+                <tr>
+                    <th>شماره عضویت</th>
+                    <th>نام</th>
+                    <th>نام خانوادگی</th>
+                    <th>تاریخ ثبت نام</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                <tr>
+                    {% for value in row %}
+                    <td>{{ value }}</td>
+                    {% endfor %}
+                    <td><a href="/profile/{{ row.id }}">View Profile</a></td>
+                    <!-- اضافه کردن لینک برای مشاهده مشخصات -->
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+        {% else %}
+        <p>No results found.</p>
+        {% endif %}
+    </div>
+
+    <div>
+        <a href="/add_member">add new member</a>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // رویداد change برای select و input اختصاص داده شده است
+            $('#orderby, #search').on('change input', function (event) {
+                var form_data = $('#my-form').serialize();  // دریافت داده‌های فرم
+
+                $.ajax({
+                    url: '/members',  // آدرس درخواست AJAX
+                    data: form_data,  // ارسال داده‌های فرم به Flask
+                    type: 'POST',
+                    success: function (response) {
+                        $('body').empty().append(response);
+                        input = document.getElementById("search")
+                        input.focus();
+                        input.setSelectionRange(input.value.length, input.value.length);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

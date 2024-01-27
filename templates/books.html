@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <div>
+        <form id="my-form" action="/members" method="post">
+            <select name="orderby" id="orderby">
+                {%if order=='id'%}
+                <option value="id" selected>id</option>
+                {%else%}
+                <option value="id">id</option>
+                {%endif%}
+                {%if order=='title'%}
+                <option value="title" selected>title</option>
+                {%else%}
+                <option value="title">title</option>
+                {%endif%}
+                {%if order=='publication_year'%}
+                <option value="publication_year" selected>publication_year</option>
+                {%else%}
+                <option value="publication_year">publication_year</option>
+                {%endif%}
+                {%if order=='quantity'%}
+                <option value="quantity" selected>quantity</option>
+                {%else%}
+                <option value="quantity">quantity</option>
+                {%endif%}
+                {%if order=='address'%}
+                <option value="address" selected>address</option>
+                {%else%}
+                <option value="address">address</option>
+                {%endif%}
+            </select>
+            <input type="search" name="search" id="search" value="{{search}}" autofocus>
+        </form>
+    </div>
+
+    <div id="result">
+        {% if rows %}
+        <table id="members_table" border="1">
+            <thead>
+                <tr>
+                    <th>Book ID</th>
+                    <th>Title</th>
+                    <th>Authors</th>
+                    <th>Publisher</th>
+                    <th>Volume</th>
+                    <th>Publication Year</th>
+                    <th>Category</th>
+                    <th>Address</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                <tr>
+                    {% for value in row %}
+                    <td>{{ value }}</td>
+                    {% endfor %}
+                    <td><a href="/book/{{ row.id }}">View Book</a></td>
+                    <!-- اضافه کردن لینک برای مشاهده مشخصات -->
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+        {% else %}
+        <p>No results found.</p>
+        {% endif %}
+    </div>
+
+    <div>
+        <a href="/add_book">Add New Book</a>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // رویداد change برای select و input اختصاص داده شده است
+            $('#orderby, #search').on('change input', function (event) {
+                var form_data = $('#my-form').serialize();  // دریافت داده‌های فرم
+
+                $.ajax({
+                    url: '/books',  // آدرس درخواست AJAX
+                    data: form_data,  // ارسال داده‌های فرم به Flask
+                    type: 'POST',
+                    success: function (response) {
+                        $('body').empty().append(response);
+                        input = document.getElementById("search")
+                        input.focus();
+                        input.setSelectionRange(input.value.length, input.value.length);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

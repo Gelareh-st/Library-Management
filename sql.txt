@@ -1,0 +1,75 @@
+CREATE DATABASE library_database
+
+use library_database
+go
+
+CREATE TABLE members (
+  id INT IDENTITY(1,1) PRIMARY KEY,
+  first_name VARCHAR(50) NOT NULL,
+  last_name VARCHAR(50) NOT NULL,
+  national_code VARCHAR(10) NOT NULL,
+  registration_date DATE NOT NULL
+);
+
+CREATE TABLE phone_numbers (
+  member_id INT,
+  phone_number VARCHAR(20) PRIMARY KEY,
+  FOREIGN KEY (member_id) REFERENCES members(id) ON DELETE CASCADE
+);
+
+CREATE TABLE publishers(
+  id INT IDENTITY(1,1) PRIMARY KEY,
+  name VARCHAR(255)
+);
+
+CREATE TABLE authors(
+  id INT IDENTITY(1,1) PRIMARY KEY,
+  name VARCHAR(255)
+);
+
+
+CREATE TABLE categories(
+  id INT IDENTITY(1,1) PRIMARY KEY,
+  name VARCHAR(255)
+);
+
+CREATE TABLE addresses(
+  id INT IDENTITY(1,1) PRIMARY KEY,
+  floor_number INT,
+  corridor_letter CHAR(1),
+  shelf_number INT
+);
+
+CREATE TABLE books (
+  id INT IDENTITY(1,1) PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  publisher_id INT,
+  volume INT,
+  publication_year INT,
+  category_id INT,
+  address_id INT,
+  quantity INT,
+  FOREIGN KEY (publisher_id) REFERENCES publishers(id),
+  FOREIGN KEY (address_id) REFERENCES addresses(id),
+  FOREIGN KEY (category_id) REFERENCES categories(id)
+);
+
+CREATE TABLE loans (
+  id INT IDENTITY(1,1) PRIMARY KEY,
+  book_id INT ,
+  member_id INT ,
+  loan_date DATE NOT NULL,
+  due_date DATE NOT NULL,
+  return_date DATE,
+  borrow_status VARCHAR(10),
+  FOREIGN KEY (member_id) REFERENCES members(id) ON DELETE SET DEFAULT,
+  FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE SET DEFAULT
+);
+
+CREATE TABLE book_authors (
+  author_id INT,
+  book_id INT,
+  PRIMARY KEY (author_id, book_id),
+  FOREIGN KEY (author_id) REFERENCES authors(id),
+  FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
+);

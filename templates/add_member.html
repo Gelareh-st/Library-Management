@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form action="/add_member" id="my_form" method="POST">
+        <label for="fname">First Name :</label>
+        <input type="text" name="fname" id="fname" required>
+
+        <label for="lname">Last Name :</label>
+        <input type="text" name="lname" id="lname" required>
+
+        <label for="ncode">National Code :</label>
+        <input type="text" name="ncode" id="ncode" required>
+
+        <label for="number">Phone Number :</label>
+        <input type="tel" name="number" id="number" required>
+
+        <label for="number2">Phone Number 2 :</label>
+        <input type="tel" name="number2" id="number2">
+
+        <button type="submit" id="submit">Add</button>
+    </form>
+
+
+    <script>
+        var form_data = $('#my-form').serialize();  // دریافت داده‌های فرم
+
+        $.ajax({
+            url: '/add_member',  // آدرس درخواست AJAX
+            data: form_data,  // ارسال داده‌های فرم به Flask
+            type: 'POST',
+            success: function (response) {
+
+                alert('Member added successfully');
+                window.location.href = '/members';
+                // $('body').empty().append(response);
+                // input = document.getElementById("search")
+                // input.focus();
+                // input.setSelectionRange(input.value.length, input.value.length);
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>
