@@ -7,13 +7,13 @@ CREATE TABLE members (
   id INT IDENTITY(1,1) PRIMARY KEY,
   first_name VARCHAR(50) NOT NULL,
   last_name VARCHAR(50) NOT NULL,
-  national_code VARCHAR(10) NOT NULL,
+  national_code BIGINT NOT NULL,
   registration_date DATE NOT NULL
 );
 
 CREATE TABLE phone_numbers (
   member_id INT,
-  phone_number VARCHAR(20) PRIMARY KEY,
+  phone_number BIGINT PRIMARY KEY,
   FOREIGN KEY (member_id) REFERENCES members(id) ON DELETE CASCADE
 );
 
@@ -73,3 +73,140 @@ CREATE TABLE book_authors (
   FOREIGN KEY (author_id) REFERENCES authors(id),
   FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
 );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+use library_database
+go
+
+ INSERT INTO members (first_name, last_name, national_code, registration_date) VALUES ('John', 'Doe', 1234567890, '2021-01-01');
+ INSERT INTO members (first_name, last_name, national_code, registration_date) VALUES ('Jane', 'Smith', 0987654321, '2020-05-10');
+ INSERT INTO members (first_name, last_name, national_code, registration_date) VALUES ('Bob', 'Johnson', 4567890123, '2019-11-15');
+ INSERT INTO members (first_name, last_name, national_code, registration_date) VALUES ('Mary', 'Lee', 7890123456, '2018-02-20');
+ INSERT INTO members (first_name, last_name, national_code, registration_date) VALUES ('Tom', 'Brown', 2345678901, '2017-09-30');
+ INSERT INTO members (first_name, last_name, national_code, registration_date) VALUES ('Sara', 'Williams', 5678901234, '2016-04-05');
+ INSERT INTO members (first_name, last_name, national_code, registration_date) VALUES ('Mike', 'Davis', 9012345678, '2015-08-12');
+ INSERT INTO members (first_name, last_name, national_code, registration_date) VALUES ('Lisa', 'Taylor', 3456789012, '2014-12-25');
+ INSERT INTO members (first_name, last_name, national_code, registration_date) VALUES ('David', 'Wilson', 6789012345, '2013-07-01');
+ INSERT INTO members (first_name, last_name, national_code, registration_date) VALUES ('Karen', 'Miller', 0123456789, '2012-03-15');
+
+ INSERT INTO phone_numbers (member_id, phone_number) VALUES (1, 1234567890);
+ INSERT INTO phone_numbers (member_id, phone_number) VALUES (1, 9876543210);
+ INSERT INTO phone_numbers (member_id, phone_number) VALUES (2, 5555555555);
+ INSERT INTO phone_numbers (member_id, phone_number) VALUES (3, 1111111111);
+ INSERT INTO phone_numbers (member_id, phone_number) VALUES (4, 2222222222);
+ INSERT INTO phone_numbers (member_id, phone_number) VALUES (4, 3333333333);
+ INSERT INTO phone_numbers (member_id, phone_number) VALUES (5, 4444444444);
+ INSERT INTO phone_numbers (member_id, phone_number) VALUES (6, 6666666666);
+ INSERT INTO phone_numbers (member_id, phone_number) VALUES (7, 7777777777);
+ INSERT INTO phone_numbers (member_id, phone_number) VALUES (10, 9999999999);
+
+ INSERT INTO publishers (name) VALUES ('Penguin Random House');
+ INSERT INTO publishers (name) VALUES ('HarperCollins');
+ INSERT INTO publishers (name) VALUES ('Simon & Schuster');
+ INSERT INTO publishers (name) VALUES ('Hachette Book Group');
+ INSERT INTO publishers (name) VALUES ('Macmillan Publishers');
+ INSERT INTO publishers (name) VALUES ('Scholastic');
+ INSERT INTO publishers (name) VALUES ('Pearson Education');
+ INSERT INTO publishers (name) VALUES ('Wiley');
+ INSERT INTO publishers (name) VALUES ('Oxford University Press');
+ INSERT INTO publishers (name) VALUES ('Cambridge University Press');
+
+ INSERT INTO authors (name) VALUES ('Stephen King');
+ INSERT INTO authors (name) VALUES ('J.K. Rowling');
+ INSERT INTO authors (name) VALUES ('Dan Brown');
+ INSERT INTO authors (name) VALUES ('John Grisham');
+ INSERT INTO authors (name) VALUES ('James Patterson');
+ INSERT INTO authors (name) VALUES ('Nora Roberts');
+ INSERT INTO authors (name) VALUES ('Agatha Christie');
+ INSERT INTO authors (name) VALUES ('George R.R. Martin');
+ INSERT INTO authors (name) VALUES ('Margaret Atwood');
+ INSERT INTO authors (name) VALUES ('Toni Morrison');
+
+ INSERT INTO categories (name) VALUES ('Fiction');
+INSERT INTO categories (name) VALUES ('Non-fiction');
+ INSERT INTO categories (name) VALUES ('Biography');
+ INSERT INTO categories (name) VALUES ('History');
+ INSERT INTO categories (name) VALUES ('Science');
+ INSERT INTO categories (name) VALUES ('Art');
+ INSERT INTO categories (name) VALUES ('Cooking');
+ INSERT INTO categories (name) VALUES ('Travel');
+ INSERT INTO categories (name) VALUES ('Sports');
+INSERT INTO categories (name) VALUES ('Religion');
+
+ INSERT INTO addresses (floor_number, corridor_letter, shelf_number) VALUES (1, 'A', 1);
+ INSERT INTO addresses (floor_number, corridor_letter, shelf_number) VALUES (2, 'B', 2);
+iNSERT INTO addresses (floor_number, corridor_letter, shelf_number) VALUES (3, 'C', 3);
+ INSERT INTO addresses (floor_number, corridor_letter, shelf_number) VALUES (4, 'D', 4);
+ INSERT INTO addresses (floor_number, corridor_letter, shelf_number) VALUES (5, 'E', 5);
+ INSERT INTO addresses (floor_number, corridor_letter, shelf_number) VALUES (6, 'F', 6);
+ INSERT INTO addresses (floor_number, corridor_letter, shelf_number) VALUES (7, 'G', 7);
+ INSERT INTO addresses (floor_number, corridor_letter, shelf_number) VALUES (8, 'H', 8);
+ INSERT INTO addresses (floor_number, corridor_letter, shelf_number) VALUES (9, 'I', 9);
+ INSERT INTO addresses (floor_number, corridor_letter, shelf_number) VALUES (10, 'J', 10);
+
+ INSERT INTO books (title, publisher_id, volume, publication_year, category_id, address_id, quantity) VALUES ('The Shining', 1, 1, 1977, 1, 1, 5);
+ INSERT INTO books (title, publisher_id, volume, publication_year, category_id, address_id, quantity) VALUES ('Harry Potter and the Philosopher”s Stone', 2, 1, 1997, 1, 2, 3);
+ INSERT INTO books (title, publisher_id, volume, publication_year, category_id, address_id, quantity) VALUES ('The Da Vinci Code', 3, 1, 2003, 2, 3, 2);
+ INSERT INTO books (title, publisher_id, volume, publication_year, category_id, address_id, quantity) VALUES ('The Firm', 4, 1, 1991, 1, 4, 4);
+ INSERT INTO books (title, publisher_id, volume, publication_year, category_id, address_id, quantity) VALUES ('Along Came a Spider', 5, 1, 1993, 1, 5, 6);
+ INSERT INTO books (title, publisher_id, volume, publication_year, category_id, address_id, quantity) VALUES ('Nora Roberts”s Bride Quartet', 6, 1, 2009, 1, 6, 3);
+ INSERT INTO books (title, publisher_id, volume, publication_year, category_id, address_id, quantity) VALUES ('Murder on the Orient Express', 7, 1, 1934, 2, 7, 2);
+ INSERT INTO books (title, publisher_id, volume, publication_year, category_id, address_id, quantity) VALUES ('A Game of Thrones', 8, 1, 1996, 1, 8, 5);
+ INSERT INTO books (title, publisher_id, volume, publication_year, category_id, address_id, quantity) VALUES ('The Handmaid”s Tale', 9, 1, 1985, 2, 9, 2);
+ INSERT INTO books (title, publisher_id, volume, publication_year, category_id, address_id, quantity) VALUES ('Beloved', 10, 1, 1987, 1, 10, 4);
+
+ INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (1, 1, '2021-02-01', '2021-03-01', NULL, 'borrowed');
+ INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (2, 2, '2021-03-15', '2021-04-15', NULL, 'borrowed');
+ INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (3, 3, '2021-04-01', '2021-05-01', NULL, 'borrowed');
+ INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (4, 4, '2021-05-15', '2021-06-15', NULL, 'borrowed');
+ INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (5, 5, '2021-06-01', '2021-07-01', NULL, 'borrowed');
+INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (6, 6, '2021-07-15', '2021-08-15', NULL, 'borrowed');
+ INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (7, 7, '2021-08-01', '2021-09-01', NULL, 'borrowed');
+ INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (8, 8, '2021-09-15', '2021-10-15', NULL, 'borrowed');
+ INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (9, 9, '2021-10-01', '2021-11-01', NULL, 'borrowed');
+ INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (10, 10, '2021-11-15', '2021-12-15', NULL, 'borrowed');
+
+ INSERT INTO book_authors (author_id, book_id) VALUES (1, 1);
+ INSERT INTO book_authors (author_id, book_id) VALUES (2, 2);
+ INSERT INTO book_authors (author_id, book_id) VALUES (3, 3);
+ INSERT INTO book_authors (author_id, book_id) VALUES (4, 4);
+ INSERT INTO book_authors (author_id, book_id) VALUES (5, 5);
+ INSERT INTO book_authors (author_id, book_id) VALUES (6, 6);
+ INSERT INTO book_authors (author_id, book_id) VALUES (7, 7);
+ INSERT INTO book_authors (author_id, book_id) VALUES (8, 8);
+ INSERT INTO book_authors (author_id, book_id) VALUES (9, 9);
+ INSERT INTO book_authors (author_id, book_id) VALUES (10, 10);

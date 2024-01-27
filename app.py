@@ -1,9 +1,10 @@
 from flask import Flask, render_template
 from database import create_cursor
-from flask import Flask, request, render_template , redirect 
+from flask import Flask, request, render_template , redirect ,flash
 import logging
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key_here'
 
 # log = logging.getLogger('werkzeug')
 # log.setLevel(logging.ERROR)
@@ -199,17 +200,37 @@ def loans():
 ##########################################################################################
 @app.route('/add_member',methods=['GET', 'POST'] )
 def add_member():
+    query_string=""
     if request.method == 'POST':
         fname = request.form.get('fname') 
         lname = request.form.get('lname') 
-        ncode = request.form.get('ncode') 
-        number = request.form.get('number')
+        ncode = int(request.form.get('ncode'))
+        number = int(request.form.get('number'))
         number2 = request.form.get('number2')
-        # query_string=f"""INSERT INTO members (first_name, last_name, national_code, registration_date)
-        #                  VALUES ({fname} , {lname} , {ncode} , CONVERT(date, GETDATE()));""";
-        cursor=create_cursor();
-        cursor.execute(f"""INSERT INTO members (first_name, last_name, national_code, registration_date)
-                         VALUES ('{fname}' , '{lname}' , {ncode} , CONVERT(date, GETDATE()));""")
+        query_string=f"""INSERT INTO members (first_name, last_name, national_code, registration_date) 
+        VALUES ('{fname}', '{lname}', '{ncode}', CONVERT(date, GETDATE()))""";
+        cursor=create_cursor()
+        cursor.execute(query_string)
+        cursor.connection.commit()
+        # flash('Book deleted successfully')
+        query_string=f"""
+                    INSERT INTO phone_numbers (member_id, phone_number)
+                    VALUES ((SELECT id FROM members WHERE national_code='{ncode}'), '{number}');
+                """
+        cursor=create_cursor()
+        cursor.execute(query_string)
+        cursor.connection.commit()
+        if number2:
+            query_string=f"""
+                    INSERT INTO phone_numbers (member_id, phone_number)
+                    VALUES ((SELECT id FROM members WHERE national_code='{ncode}'), '{number2}');
+                """
+            cursor=create_cursor()
+            cursor.execute(query_string)
+            cursor.connection.commit()
+
+        
+        return redirect('/members') 
         
     return render_template('add_member.html')
 
