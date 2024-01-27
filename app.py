@@ -283,7 +283,23 @@ def add_member():
         
     return render_template('add_member.html')
 ##########################################################################################
+@app.route('/new_loan',methods=['GET', 'POST'])
+def new_loan():
+    cursor=create_cursor()
+    books=cursor.execute(f"SELECT title,id FROM books").fetchall()
+    members=cursor.execute(f"SELECT first_name,last_name,id FROM members").fetchall()
 
+    if request.method == 'POST':
+        member_id=request.form.get('member_name') 
+        book_id=request.form.get('book_name')
+        due_date= request.form.get('due_date')
+        cursor.execute(f"""INSERT INTO loans (book_id,member_id,loan_date,due_date)
+               VALUES ('{book_id}','{member_id}',CONVERT(date, GETDATE()), CAST ('{due_date}' AS DATE))""")
+
+        cursor.connection.commit()
+        return redirect('/loans') 
+
+    return render_template('new_loan.html' , books=books , members=members)
 
 ##########################################################################################
 ##########################################################################################

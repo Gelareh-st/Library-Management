@@ -61,7 +61,6 @@ CREATE TABLE loans (
   loan_date DATE NOT NULL,
   due_date DATE NOT NULL,
   return_date DATE,
-  borrow_status VARCHAR(10),
   FOREIGN KEY (member_id) REFERENCES members(id) ON DELETE SET DEFAULT,
   FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE SET DEFAULT
 );
@@ -189,16 +188,16 @@ iNSERT INTO addresses (floor_number, corridor_letter, shelf_number) VALUES (3, '
  INSERT INTO books (title, publisher_id, volume, publication_year, category_id, address_id, quantity) VALUES ('The Handmaid”s Tale', 9, 1, 1985, 2, 9, 2);
  INSERT INTO books (title, publisher_id, volume, publication_year, category_id, address_id, quantity) VALUES ('Beloved', 10, 1, 1987, 1, 10, 4);
 
- INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (1, 1, '2021-02-01', '2021-03-01', NULL, 'borrowed');
- INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (2, 2, '2021-03-15', '2021-04-15', NULL, 'borrowed');
- INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (3, 3, '2021-04-01', '2021-05-01', NULL, 'borrowed');
- INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (4, 4, '2021-05-15', '2021-06-15', NULL, 'borrowed');
- INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (5, 5, '2021-06-01', '2021-07-01', NULL, 'borrowed');
-INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (6, 6, '2021-07-15', '2021-08-15', NULL, 'borrowed');
- INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (7, 7, '2021-08-01', '2021-09-01', NULL, 'borrowed');
- INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (8, 8, '2021-09-15', '2021-10-15', NULL, 'borrowed');
- INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (9, 9, '2021-10-01', '2021-11-01', NULL, 'borrowed');
- INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (10, 10, '2021-11-15', '2021-12-15', NULL, 'borrowed');
+ INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (1, 1, '2021-02-01', '2021-03-01', NULL);
+ INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (2, 2, '2021-03-15', '2021-04-15', NULL);
+ INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (3, 3, '2021-04-01', '2021-05-01', NULL);
+ INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (4, 4, '2021-05-15', '2021-06-15', NULL);
+ INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (5, 5, '2021-06-01', '2021-07-01', NULL);
+INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (6, 6, '2021-07-15', '2021-08-15', NULL);
+ INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (7, 7, '2021-08-01', '2021-09-01', NULL);
+ INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (8, 8, '2021-09-15', '2021-10-15', NULL);
+ INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (9, 9, '2021-10-01', '2021-11-01', NULL);
+ INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date, borrow_status) VALUES (10, 10, '2021-11-15', '2021-12-15', NULL);
 
  INSERT INTO book_authors (author_id, book_id) VALUES (1, 1);
  INSERT INTO book_authors (author_id, book_id) VALUES (2, 2);

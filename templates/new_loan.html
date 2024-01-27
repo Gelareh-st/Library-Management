@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form action="/new_loan" method="POST">
+
+        <label for="book_name">Book name : </label>
+        <input type="text" id="book_name" name="book_name" list="books">
+        <datalist id="books">
+            {% for book in books%}
+            <option value="{{book[1]}}">{{book[0]}}</option>
+            {%endfor%}
+        </datalist>
+
+        <label for="member_name">Member name : </label>
+        <input type="text" id="member_name" name="member_name" list="members">
+        <datalist id="members">
+            {% for member in members%}
+            <option value="{{member[2]}}">{{member[0]}} {{member[1]}}</option>
+            {%endfor%}
+        </datalist>
+
+
+        <label for="loan_date">Due Date</label>
+        <input type="date" name="due_date" id="due_date">
+
+        <button type="submit" value="Submit">add</button>
+    </form>
+    <!-- <form action="/new_loan" id="my_form">
+        <label for="book_name"></label>
+        <select name="book_name" id="book_name">
+            {% for book in books %}
+            <option value="{{book[0]}}">{{book[1]}}</option>
+            {%endfor%}
+        </select>
+
+
+
+    </form> -->
+</body>
+
+</html>
