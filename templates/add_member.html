@@ -24,27 +24,21 @@
         <label for="number2">Phone Number 2 :</label>
         <input type="tel" name="number2" id="number2">
 
-        <button onclick="addMember()" id="submit">Add</button>
+        <button type="submit" id="submit">Add</button>
     </form>
     <script>
-        function add_member() {
-            var form_data = $('#my_form').serialize();  // دریافت داده‌های فرم
-
-            $.ajax({
-                url: '/add_member',  // آدرس درخواست AJAX
-                data: form_data,  // ارسال داده‌های فرم به Flask
-                type: 'POST',
-                success: function (response) {
-                    alert('Member added successfully');
-                    window.location.href = '/members';
-                }
-            });
-
-        }
-
-
-
-
+        // function addMember() {
+        //     var form_data = $('#my_form').serialize();  // دریافت داده‌های فرم
+        //     $.ajax({
+        //         url: '/add_member',  // آدرس درخواست AJAX
+        //         data: form_data,  // ارسال داده‌های فرم به Flask
+        //         type: 'POST',
+        //         success: function (response) {
+        //             alert('Member added successfully');
+        //             window.location.href = '/members';
+        //         }
+        //     });
+        // }
     </script>
 
 </body>

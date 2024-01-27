@@ -179,6 +179,55 @@ def delete_book():
     cursor.execute(f"DELETE FROM books WHERE books.id={book_id}")
     cursor.commit()
     return redirect('/books')
+##########################################################################################
+@app.route('/add_book',methods=['GET', 'POST'] )
+def add_book():
+    cursor = create_cursor()
+    categories=cursor.execute(f"SELECT * FROM categories").fetchall()
+
+    if request.method == 'POST':
+        title=request.form.get('title')
+        publisher=request.form.get('publisher')
+        authors= request.form.getlist('textInputs[]')
+        volume=int(request.form.get('volume'))
+        publicationyear=int(request.form.get('year'))
+        category_id=int(request.form.get('category'))
+        floor=request.form.get('floor')
+        corridor=request.form.get('corridor')
+        shelf=request.form.get('shelf')
+        quantity=request.form.get('quantity')
+        print("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv",authors)
+
+        ispublisher=cursor.execute(f"SELECT COUNT(*) FROM publishers WHERE publishers.name='{publisher}'").fetchone()
+        if ispublisher[0]==0:
+            cursor.execute(f"INSERT INTO publishers (name) VALUES ('{publisher}')")
+        publisher_id= cursor.execute(f"SELECT id FROM publishers WHERE publishers.name='{publisher}'").fetchone()
+
+        address_id=cursor.execute(f"""SELECT id FROM addresses 
+                                WHERE addresses.floor_number='{floor}'
+                                AND addresses.corridor_letter='{corridor}'
+                                AND addresses.shelf_number='{shelf}'
+                                """).fetchone()
+        
+        cursor.execute(f"""INSERT INTO books (title,publisher_id,volume,publication_year,category_id,address_id,quantity)
+                       VALUES ('{title}','{publisher_id[0]}','{volume}','{publicationyear}','{category_id}','{address_id[0]}','{quantity}')
+                                """);
+        cursor.connection.commit()
+                
+        for author in authors:
+            print(author)
+            isauthor = cursor.execute(f"SELECT COUNT(*) FROM authors WHERE authors.name='{author}'").fetchone()
+            if isauthor[0] == 0:
+                print("nabudddddddddddddddddddd")
+                cursor.execute(f"INSERT INTO authors (name) VALUES ('{author}')")
+                cursor.connection.commit()
+                author_id = cursor.execute(f"SELECT id FROM authors WHERE authors.name='{author}'").fetchone()[0]
+                book_id = cursor.execute(f"SELECT id FROM books WHERE books.title='{title}'").fetchone()[0]
+                cursor.execute(f"INSERT INTO book_authors (book_id,author_id) VALUES ('{book_id}','{author_id}')")
+                cursor.connection.commit()
+
+        return redirect('/books') 
+    return render_template('add_book.html' , categories=categories)
 ##############################################################################################################################################
 ######################################################################################################################################## LOANS
 ##############################################################################################################################################
@@ -233,6 +282,13 @@ def add_member():
         return redirect('/members') 
         
     return render_template('add_member.html')
+##########################################################################################
+
+
+##########################################################################################
+##########################################################################################
+##########################################################################################
+##########################################################################################
 
 
 

@@ -1,28 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Book</title>
 </head>
-<body>
-    <form action="POST">
+<body >
+    <form action="/add_book" id="my_form" method="POST">
         <label for="title">Book Title :</label>
-        <input type="text" name="" id="title">
-        <label for="authors">Authors</label>
-        <input type="text" name="" id="authors">
+        <input type="text" name="title" id="title" required>
+
+
         <label for="publisher">Publisher</label>
-        <input type="text" name="" id="publisher">
+        <input type="text" name="publisher" id="publisher" required>
+
+        <label for="authors">Authors</label>
+        <input type="text" name="" id="authors" required>
+
         <label for="volume">Volume</label>
-        <input type="number" name="" id="volume">
+        <input type="number" name="volume" id="volume" value="1" required>
+
         <label for="year">Publication Year</label>
-        <input type="number" name="" id="year">
-        <p>category</p>
-        <p>address</p>
+        <input type="number" name="year" id="year" required>
+
+        <label for="category">category</label>
+        <select name="category" id="category">
+            {% for category in categories %}
+            <option value="{{category[0]}}">{{category[1]}}</option>
+            {%endfor%}
+        </select>
+
+        <label for="floor">floor</label>
+        <select name="floor" id="floor">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
+
+        <label for="corridor">corridor</label>
+        <select name="corridor" id="corridor">
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+        </select>
+
+        <label for="shelf">shelf</label>
+        <select name="shelf" id="shelf">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+        </select>
+
+
+
+
+
+
         <label for="quantity">Quantity</label>
-        <input type="number" name="" id="quantity">
+        <input type="number" name="quantity" id="quantity" value="1" required>
 
 
+
+
+        <div id="inputContainer">
+            <input type="text" name="textInputs[]" />
+        </div>
+        <button type="button" onclick="addInput()">Add Input</button>
+
+
+
+        <button type="submit" id="submit">Add</button>
     </form>
+
+    <script>
+        function addInput() {
+            var inputContainer = document.getElementById('inputContainer');
+            var newInput = document.createElement('input');
+            newInput.type = 'text';
+            newInput.name = 'textInputs[]';
+            inputContainer.appendChild(newInput);
+        }
+    </script>
+
 </body>
+
 </html>
+
+
