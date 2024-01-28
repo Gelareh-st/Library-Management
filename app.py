@@ -263,22 +263,6 @@ def add_member():
         cursor=create_cursor()
         cursor.execute(query_string)
         cursor.connection.commit()
-        # flash('Book deleted successfully')
-        # query_string=f"""
-        #             INSERT INTO phone_numbers (member_id, phone_number)
-        #             VALUES ((SELECT id FROM members WHERE national_code='{ncode}'), '{number}');
-        #         """
-        # cursor=create_cursor()
-        # cursor.execute(query_string)
-        # cursor.connection.commit()
-        # if number2:
-        #     query_string=f"""
-        #             INSERT INTO phone_numbers (member_id, phone_number)
-        #             VALUES ((SELECT id FROM members WHERE national_code='{ncode}'), '{number2}');
-        #         """
-        #     cursor=create_cursor()
-        #     cursor.execute(query_string)
-        #     cursor.connection.commit()
 
         for number in numbers:
             query_string=f"""
@@ -287,8 +271,6 @@ def add_member():
             cursor=create_cursor()
             cursor.execute(query_string)
             cursor.connection.commit()
-    
-
         
         return redirect('/members') 
         
@@ -328,7 +310,69 @@ def return_loan():
     
     return redirect(f'/profile/{member_id}')
 ##########################################################################################
+@app.route('/edit_member/<int:member_id>',methods=['GET', 'POST'] )
+def edit_member(member_id):
+    cursor=create_cursor()
+    fname=cursor.execute(f"SELECT first_name FROM members WHERE members.id='{member_id}'").fetchone()[0]
+    lname=cursor.execute(f"SELECT last_name FROM members WHERE members.id='{member_id}'").fetchone()[0]
+    ncode=cursor.execute(f"SELECT national_code FROM members WHERE members.id='{member_id}'").fetchone()[0]
+    numbers=cursor.execute(f"SELECT phone_number FROM phone_numbers WHERE phone_numbers.member_id='{member_id}'").fetchall()
+    
+    if request.method == 'POST':
+        fname = request.form.get('fname') 
+        lname = request.form.get('lname') 
+        ncode = int(request.form.get('ncode'))
+        numbers= request.form.getlist('textInputs[]')
+        query_string=f"""UPDATE members
+                        SET first_name='{fname}',last_name='{lname}',national_code='{ncode}'
+                        WHERE members.id={member_id} """;
+        cursor=create_cursor()
+        cursor.execute(query_string)
+        cursor.connection.commit()
+
+        query_string=f"DELETE FROM phone_numbers WHERE phone_numbers.member_id={member_id};";
+        cursor.execute(query_string)
+        cursor.connection.commit()
+        for number in numbers:
+            if number!='0':
+                query_string=f"""
+                INSERT INTO phone_numbers (member_id, phone_number)
+                VALUES ('{member_id}', '{number}');""";
+                cursor.execute(query_string)
+                cursor.connection.commit()
+        
+        return redirect(f"/profile/{member_id}") 
+        
+    return render_template('edit_member.html', fname=fname,lname=lname,ncode=ncode,numbers=numbers,member_id=member_id)
 ##########################################################################################
+@app.route('/edit_book/<int:book_id>',methods=['GET', 'POST'] )
+def edit_book(book_id):
+    cursor=create_cursor()
+    quantity=cursor.execute(f"SELECT quantity FROM books WHERE books.id='{book_id}'").fetchone()[0]
+    floor=cursor.execute(f"SELECT floor_number FROM addresses WHERE addresses.id=(SELECT address_id FROM books WHERE books.id='{book_id}')").fetchone()[0]
+    corridor=cursor.execute(f"SELECT corridor_letter FROM addresses WHERE addresses.id=(SELECT address_id FROM books WHERE books.id='{book_id}')").fetchone()[0]
+    shelf=cursor.execute(f"SELECT shelf_number FROM addresses WHERE addresses.id=(SELECT address_id FROM books WHERE books.id='{book_id}')").fetchone()[0]
+
+    if request.method == 'POST':
+        quantity = request.form.get('quantity') 
+        floor=request.form.get('floor')
+        corridor=request.form.get('corridor')
+        shelf=request.form.get('shelf')
+        address_id=cursor.execute(f"""SELECT id FROM addresses 
+                        WHERE addresses.floor_number='{floor}'
+                        AND addresses.corridor_letter='{corridor}'
+                        AND addresses.shelf_number='{shelf}'
+                        """).fetchone()
+        query_string=f"""UPDATE books
+                        SET quantity='{quantity}',address_id='{address_id[0]}'
+                        WHERE books.id={book_id} """;
+        cursor=create_cursor()
+        cursor.execute(query_string)
+        cursor.connection.commit()
+
+        return redirect(f"/book/{book_id}") 
+        
+    return render_template('edit_book.html', quantity=quantity,book_id=book_id,floor=floor,corridor=corridor,shelf=shelf)
 ##########################################################################################
 
 

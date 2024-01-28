@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <title>New Book</title>
+</head>
+
+
+
+<body>
+    <div id="bg"></div>
+    <div id="container">
+        <div id="side">
+            <h3>Library Management</h3>
+            <br>
+            <ul>
+                <a href="/">
+                    <li>Home</li>
+                </a>
+                <a href="/members">
+                    <li>Members</li>
+                </a>
+                <a href="/books">
+                    <li>Books</li>
+                </a>
+                <a href="/loans">
+                    <li>Loans</li>
+                </a>
+                <a href="/add_member">
+                    <li>Add Member</li>
+                </a>
+                <a href="/add_book">
+                    <li id="online">Add Book</li>
+                </a>
+                <a href="/new_loan">
+                    <li>Add Loan</li>
+                </a>
+            </ul>
+        </div>
+        <div id="main">
+            <h1>Add Book</h1>
+            <div>
+
+                <form action="/edit_book/{{book_id}}" id="add_form" class="add_book" method="POST">
+
+                    <label for="quantity" class="sh_label">*Quantity</label>
+                    <input type="number" name="quantity" id="quantity" value="{{quantity}}" required>
+
+                    <br><br>
+
+                    <label for="floor" class="sh_label">*Floor</label>
+                    <select name="floor" id="floor">
+                        <option value="{{floor}}" selected hidden>{{floor}}</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+
+
+                    <label for="corridor" class="sh_label">*Corridor</label>
+                    <select name="corridor" id="corridor">
+                        <option value="{{corridor}}" selected hidden>{{corridor}}</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+
+                    </select>
+
+
+                    <label for="shelf" class="sh_label">*Shelf</label>
+                    <select name="shelf" id="shelf">
+                        <option value="{{shelf}}" selected hidden>{{shelf}}</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+
+
+                    <br><br>
+                    <button type="submit" id="submit">Update Book</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+
+</html>

@@ -168,7 +168,7 @@ INSERT INTO categories (name) VALUES ('Religion');
 
  INSERT INTO addresses (floor_number, corridor_letter, shelf_number) VALUES (1, 'A', 1);
  INSERT INTO addresses (floor_number, corridor_letter, shelf_number) VALUES (2, 'B', 2);
-iNSERT INTO addresses (floor_number, corridor_letter, shelf_number) VALUES (3, 'C', 3);
+ INSERT INTO addresses (floor_number, corridor_letter, shelf_number) VALUES (3, 'C', 3);
  INSERT INTO addresses (floor_number, corridor_letter, shelf_number) VALUES (4, 'D', 4);
  INSERT INTO addresses (floor_number, corridor_letter, shelf_number) VALUES (5, 'E', 5);
  INSERT INTO addresses (floor_number, corridor_letter, shelf_number) VALUES (6, 'F', 6);
