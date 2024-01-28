@@ -97,8 +97,7 @@
                                     {% for value in row %}
                                     <td>{{ value }}</td>
                                     {% endfor %}
-                                    <td><a href="/profile/{{ row.id }}">View Profile</a></td>
-                                    <!-- اضافه کردن لینک برای مشاهده مشخصات -->
+                                    <td><a href="/profile/{{ row.id }}"><img src="/static/images/view_icon.png" alt="" class="icon"></a></td>
                                 </tr>
                                 {% endfor %}
 

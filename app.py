@@ -217,10 +217,8 @@ def add_book():
         cursor.connection.commit()
                 
         for author in authors:
-            print(author)
             isauthor = cursor.execute(f"SELECT COUNT(*) FROM authors WHERE authors.name='{author}'").fetchone()
             if isauthor[0] == 0:
-                print("nabudddddddddddddddddddd")
                 cursor.execute(f"INSERT INTO authors (name) VALUES ('{author}')")
                 cursor.connection.commit()
                 author_id = cursor.execute(f"SELECT id FROM authors WHERE authors.name='{author}'").fetchone()[0]

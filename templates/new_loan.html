@@ -4,34 +4,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <title>New Loan</title>
 </head>
 
+
 <body>
-    <form action="/new_loan" method="POST">
+    <div id="bg"></div>
+    <div id="container">
+        <div id="side">
+            <h3>Library Management</h3>
+            <br>
+            <ul>
+                <a href="/">
+                    <li>Home</li>
+                </a>
+                <a href="/members">
+                    <li>Members</li>
+                </a>
+                <a href="/books">
+                    <li>Books</li>
+                </a>
+                <a href="/loans">
+                    <li>Loans</li>
+                </a>
+                <a href="/add_member">
+                    <li>Add Memeber</li>
+                </a>
+                <a href="/add_book">
+                    <li>Add Book</li>
+                </a>
+                <a href="/new_loan">
+                    <li id="online">Add Loan</li>
+                </a>
+            </ul>
+        </div>
+        <div id="main">
+            <h1>New Loan</h1>
+            <div>
 
-        <label for="book_name">Book name : </label>
-        <input type="text" id="book_name" name="book_name" list="books">
-        <datalist id="books">
-            {% for book in books%}
-            <option value="{{book[1]}}">{{book[0]}}</option>
-            {%endfor%}
-        </datalist>
+                <form action="/new_loan" method="POST" id="add_form">
 
-        <label for="member_name">Member name : </label>
-        <input type="text" id="member_name" name="member_name" list="members">
-        <datalist id="members">
-            {% for member in members%}
-            <option value="{{member[2]}}">{{member[0]}} {{member[1]}}</option>
-            {%endfor%}
-        </datalist>
+                    <label for="book_name">Book name : </label>
+                    <input type="text" id="book_name" name="book_name" list="books" required>
+                    <datalist id="books">
+                        {% for book in books%}
+                        <option value="{{book[1]}}">{{book[0]}}</option>
+                        {%endfor%}
+                    </datalist>
+
+                    <label for="member_name">Member name : </label>
+                    <input type="text" id="member_name" name="member_name" list="members" required>
+                    <datalist id="members">
+                        {% for member in members%}
+                        <option value="{{member[2]}}">{{member[0]}} {{member[1]}}</option>
+                        {%endfor%}
+                    </datalist>
+
+<br><br>
+                    <label for="loan_date">Due Date</label>
+                    <input type="date" name="due_date" id="due_date" required>
+<br><br>
+                    <button type="submit" value="Submit">Submit Loan</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</body>
 
 
-        <label for="loan_date">Due Date</label>
-        <input type="date" name="due_date" id="due_date">
 
-        <button type="submit" value="Submit">add</button>
-    </form>
+
+
+<body>
+
     <!-- <form action="/new_loan" id="my_form">
         <label for="book_name"></label>
         <select name="book_name" id="book_name">
