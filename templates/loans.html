@@ -32,7 +32,7 @@
                     <li id="online">Loans</li>
                 </a>
                 <a href="/add_member">
-                    <li>Add Memeber</li>
+                    <li>Add Member</li>
                 </a>
                 <a href="/add_book">
                     <li>Add Book</li>
@@ -100,10 +100,10 @@
                                 <td>{{row[4]}}</td>
                                 {% if row[5] %}
                                 <td>{{row[5]}}</td>
-                                <td style="background-color: #80D79C; border: solid #75ba8b 1px;">bargasht</td>
+                                <td style="background-color: #80D79C; border: solid #75ba8b 1px;">Returned</td>
                                 {% else %}
                                 <td><button id="return" onclick="Return('{{row[0]}},{{row[1]}},{{row[2]}}')">Return</button></td>
-                                {% if row[4] < today %} <td style="background-color: #E09AA6; border: solid #b47b84 1px;"> <p>gozasht</p></td>
+                                {% if row[4] < today %} <td style="background-color: #E09AA6; border: solid #b47b84 1px;"> <p>Overdue</p></td>
                                 {% else %}
                                 <td></td>
                                     {% endif %}

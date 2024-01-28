@@ -6,70 +6,122 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <title>User Profile</title>
 </head>
 
 <body>
-    <div>
-        <h1>User Profile</h1>
-        <p>ID: {{ user[0] }}</p>
-        <p>Name: {{ user[1] }}</p>
-        <p>lastname: {{ user[2] }}</p>
-        <p>code meli: {{ user[3] }}</p>
-        <p>tarikh sabte nam: {{ user[4] }}</p>
-        <p>shomare:</p>
-        {% if numbers %}
-        {% for number in numbers %}
-        <p> {{ number[0] }}</p>
-        {% endfor %}
-        {% endif %}
 
-    </div>
 
-    <div>
-        <button onclick="confirmDelete()">delete</button>
-        <button value="edit">edit</button>
-    </div>
+    <div id="bg"></div>
+    <div id="container">
+        <div id="side">
+            <h3>Library Management</h3>
+            <br>
+            <ul>
+                <a href="/">
+                    <li>Home</li>
+                </a>
+                <a href="/members">
+                    <li>Members</li>
+                </a>
+                <a href="/books">
+                    <li>Books</li>
+                </a>
+                <a href="/loans">
+                    <li>Loans</li>
+                </a>
+                <a href="/add_member">
+                    <li>Add Member</li>
+                </a>
+                <a href="/add_book">
+                    <li>Add Book</li>
+                </a>
+                <a href="/new_loan">
+                    <li>Add Loan</li>
+                </a>
+            </ul>
+        </div>
+        <div id="main">
+            <h1> {{user[0]}}.{{ user[1] }} {{user[2]}}</h1>
+            <div>
+                <div style="display: flex; flex-direction: row;">
+                    <div style="width: 70%;" id="descriptions">
+                        <p>ID: {{ user[0] }}</p>
+                        <p>Name: {{ user[1] }}</p>
+                        <p>lastname: {{ user[2] }}</p>
+                        <p>code meli: {{ user[3] }}</p>
+                        <p>tarikh sabte nam: {{ user[4] }}</p>
+                        <p>shomare:</p>
+                        {% if numbers %}
+                        {% for number in numbers %}
+                        <p> {{ number[0] }}</p>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
 
-    <div>
-        {% if loans %}
-        <label for="members_table">loans</label>
-        <table id="members_table" border="1">
-            <thead>
-                <tr>
-                    <th>Loan ID</th>
-                    <th>Book ID</th>
-                    <th>Book Title</th>
-                    <th>Loan Date</th>
-                    <th>Due Date</th>
-                    <th>Return Date</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for loan in loans %}
-                <tr>
-                    <td>{{loan[0]}}</td>
-                    <td>{{loan[1]}}</td>
-                    <td>{{loan[2]}}</td>
-                    <td>{{loan[3]}}</td>
-                    <td>{{loan[4]}}</td>
-                    {% if loan[5] %}
-                    <td>{{loan[5]}}</td>
-                    <td style="background-color: greenyellow;">bargasht</td>
+                    <div style="width: 30%;" class="buttons-div">
+                        <button onclick="confirmDelete()">Delete Profile</button>
+                        <button value="edit">Edit Profile</button>
+                        <button value="loan">Loan Book</button>
+                    </div>
+
+                </div>
+
+
+                <div>
+                    {% if loans %}
+                    <label for="members_table" id="table_label">loans</label>
+                    <table id="members_table">
+                        <thead>
+                            <tr>
+                                <th>Loan ID</th>
+                                <th>Book ID</th>
+                                <th>Book Title</th>
+                                <th>Loan Date</th>
+                                <th>Due Date</th>
+                                <th>Return Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for loan in loans %}
+                            <tr>
+                                <td>{{loan[0]}}</td>
+                                <td>{{loan[1]}}</td>
+                                <td>{{loan[2]}}</td>
+                                <td>{{loan[3]}}</td>
+                                <td>{{loan[4]}}</td>
+                                {% if loan[5] %}
+                                <td>{{loan[5]}}</td>
+                                <td style="background-color: #80D79C; border: solid #75ba8b 1px;">Returned</td>
+                                {% else %}
+                                <td><button onclick="Return('{{loan[0]}},{{loan[1]}},{{user[0]}}')">Return</button></td>
+                                {% if loan[4] < today %} <td
+                                    style="background-color: #E09AA6; border: solid #b47b84 1px;">Overdue</td>
+                                    {% else %}
+                                    <td></td>
+                                    {% endif %}
+                                    {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                     {% else %}
-                    <td><button onclick="Return('{{loan[0]}},{{loan[1]}},{{user[0]}}')">Return</button></td>
-                    {% if loan[4] < today %} <td style="background-color: red;">gozasht</td>
-                        {% endif %}
-                        {% endif %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <p>No loan.</p>
-        {% endif %}
+                    <p>No loan.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
     </div>
+
+
+
+
+
 
 
 
