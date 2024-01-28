@@ -5,86 +5,123 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loans</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
-    <div>
-        <form id="my-form" action="/members" method="post">
-            <select name="orderby" id="orderby">
-                {%if order=='id'%}
-                <option value="id" selected>id</option>
-                {%else%}
-                <option value="id">id</option>
-                {%endif%}
 
-                {%if order=='loan_date'%}
-                <option value="loan_date" selected>loan_date</option>
-                {%else%}
-                <option value="loan_date">loan_date</option>
-                {%endif%}
+    <div id="bg"></div>
+    <div id="container">
+        <div id="side">
+            <h3>Library Management</h3>
+            <br>
+            <ul>
+                <a href="/">
+                    <li>Home</li>
+                </a>
+                <a href="/members">
+                    <li>Members</li>
+                </a>
+                <a href="/books">
+                    <li>Books</li>
+                </a>
+                <a href="/loans">
+                    <li id="online">Loans</li>
+                </a>
+                <a href="/add_member">
+                    <li>Add Memeber</li>
+                </a>
+                <a href="/add_book">
+                    <li>Add Book</li>
+                </a>
+                <a href="/new_loan">
+                    <li>Add Loan</li>
+                </a>
+            </ul>
+        </div>
+        <div id="main">
+            <h1>Books List</h1>
+            <div>
+                <div>
+                    <form id="my-form" action="/members" method="post">
+                        <select name="orderby" id="orderby">
+                            {%if order=='id'%}
+                            <option value="id" selected>Id</option>
+                            {%else%}
+                            <option value="id">Id</option>
+                            {%endif%}
 
-                {%if order=='due_date'%}
-                <option value="due_date" selected>due_date</option>
-                {%else%}
-                <option value="due_date">due_date</option>
-                {%endif%}
+                            {%if order=='loan_date'%}
+                            <option value="loan_date" selected>Loan Date</option>
+                            {%else%}
+                            <option value="loan_date">Loan Date</option>
+                            {%endif%}
 
-                {%if order=='return_date'%}
-                <option value="return_date" selected>return_date</option>
-                {%else%}
-                <option value="return_date">return_date</option>
-                {%endif%}
+                            {%if order=='due_date'%}
+                            <option value="due_date" selected>Due Date</option>
+                            {%else%}
+                            <option value="due_date">Due Date</option>
+                            {%endif%}
 
-            </select>
-            <!-- <input type="search" name="search" id="search" value="{{search}}" autofocus> -->
-        </form>
-    </div>
+                            {%if order=='return_date'%}
+                            <option value="return_date" selected>Return Date</option>
+                            {%else%}
+                            <option value="return_date">Return Date</option>
+                            {%endif%}
 
-    <div id="result">
-        {% if rows %}
-        <table id="members_table" border="1">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Book</th>
-                    <th>Member</th>
-                    <th>Loan Date</th>
-                    <th>Due Date</th>
-                    <th>Return Date</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in rows %}
-                <tr>
-                    <td>{{row[0]}}</td>
-                    <td><a href="/book/{{ row.book_id }}" target="_blank">{{row[1]}}</a></td>
-                    <td><a href="/profile/{{ row.member_id }}" target="_blank">{{row[2]}}</a></td>
-                    <td>{{row[3]}}</td>
-                    <td>{{row[4]}}</td>
-                    {% if row[5] %}
-                    <td>{{row[5]}}</td>
-                    <td style="background-color: greenyellow;">bargasht</td>
+                        </select>
+                    </form>
+                </div>
+
+                <div id="result">
+                    {% if rows %}
+                    <table id="members_table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Book</th>
+                                <th>Member</th>
+                                <th>Loan Date</th>
+                                <th>Due Date</th>
+                                <th>Return Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in rows %}
+                            <tr>
+                                <td>{{row[0]}}</td>
+                                <td><a href="/book/{{ row.book_id }}">{{row[1]}}</a></td>
+                                <td><a href="/profile/{{ row.member_id }}">{{row[2]}}</a></td>
+                                <td>{{row[3]}}</td>
+                                <td>{{row[4]}}</td>
+                                {% if row[5] %}
+                                <td>{{row[5]}}</td>
+                                <td style="background-color: #80D79C; border: solid #75ba8b 1px;">bargasht</td>
+                                {% else %}
+                                <td><button id="return" onclick="Return('{{row[0]}},{{row[1]}},{{row[2]}}')">Return</button></td>
+                                {% if row[4] < today %} <td style="background-color: #E09AA6; border: solid #b47b84 1px;"> <p>gozasht</p></td>
+                                {% else %}
+                                <td></td>
+                                    {% endif %}
+                                    {% endif %}
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
                     {% else %}
-                    <td><button onclick="Return('{{row[0]}},{{row[1]}},{{row[2]}}')">Return</button></td>
-                    {% if row[4] < today %}
-                     <td style="background-color: red;">gozasht</td>
+                    <p>No results found.</p>
                     {% endif %}
-                    {% endif %}
-                </tr>
-                {% endfor %}
-
-            </tbody>
-        </table>
-        {% else %}
-        <p>No results found.</p>
-        {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div>
-        <a href="/new_loan">Add New loan</a>
-    </div>
+
 
     <script>
         $(document).ready(function () {

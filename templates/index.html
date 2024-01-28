@@ -1,14 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
     <title>Query Results</title>
 </head>
+
 <body>
-    <a href="/members">members</a>
-    <a href="/books">books</a>
-    <a href="/loans">loans</a>
-    <h1>{{data}}</h1>
+    <div id="bg"></div>
+    <div id="container">
+        <div id="side">
+            <h3>Library Management</h3>
+            <br>
+            <ul>
+                <a href="/">
+                    <li id="online">Home</li>
+                </a>
+                <a href="/members">
+                    <li>Members</li>
+                </a>
+                <a href="/books">
+                    <li>Books</li>
+                </a>
+                <a href="/loans">
+                    <li>Loans</li>
+                </a>
+                <a href="/add_member">
+                    <li>Add Memeber</li>
+                </a>
+                <a href="/add_book">
+                    <li>Add Book</li>
+                </a>
+                <a href="/new_loan">
+                    <li>Add Loan</li>
+                </a>
+            </ul>
+        </div>
+        <div id="main">
+            <h1>text</h1>
+            <div></div>
+        </div>
+
+    </div>
+
 </body>
+
 </html>

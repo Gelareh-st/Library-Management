@@ -5,79 +5,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Books</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
-    <div>
-        <form id="my-form" action="/members" method="post">
-            <select name="orderby" id="orderby">
-                {%if order=='id'%}
-                <option value="id" selected>id</option>
-                {%else%}
-                <option value="id">id</option>
-                {%endif%}
-                {%if order=='title'%}
-                <option value="title" selected>title</option>
-                {%else%}
-                <option value="title">title</option>
-                {%endif%}
-                {%if order=='publication_year'%}
-                <option value="publication_year" selected>publication_year</option>
-                {%else%}
-                <option value="publication_year">publication_year</option>
-                {%endif%}
-                {%if order=='quantity'%}
-                <option value="quantity" selected>quantity</option>
-                {%else%}
-                <option value="quantity">quantity</option>
-                {%endif%}
-                {%if order=='address'%}
-                <option value="address" selected>address</option>
-                {%else%}
-                <option value="address">address</option>
-                {%endif%}
-            </select>
-            <input type="search" name="search" id="search" value="{{search}}" autofocus>
-        </form>
-    </div>
+    <div id="bg"></div>
+    <div id="container">
+        <div id="side">
+            <h3>Library Management</h3>
+            <br>
+            <ul>
+                <a href="/">
+                    <li>Home</li>
+                </a>
+                <a href="/members">
+                    <li>Members</li>
+                </a>
+                <a href="/books">
+                    <li id="online">Books</li>
+                </a>
+                <a href="/loans">
+                    <li>Loans</li>
+                </a>
+                <a href="/add_member">
+                    <li>Add Memeber</li>
+                </a>
+                <a href="/add_book">
+                    <li>Add Book</li>
+                </a>
+                <a href="/new_loan">
+                    <li>Add Loan</li>
+                </a>
+            </ul>
+        </div>
+        <div id="main">
+            <h1>Books List</h1>
+            <div>
+                <div>
+                    <form id="my-form" action="/members" method="post">
 
-    <div id="result">
-        {% if rows %}
-        <table id="members_table" border="1">
-            <thead>
-                <tr>
-                    <th>Book ID</th>
-                    <th>Title</th>
-                    <th>Authors</th>
-                    <th>Publisher</th>
-                    <th>Volume</th>
-                    <th>Publication Year</th>
-                    <th>Category</th>
-                    <th>Address</th>
-                    <th>Quantity</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in rows %}
-                <tr>
-                    {% for value in row %}
-                    <td>{{ value }}</td>
-                    {% endfor %}
-                    <td><a href="/book/{{ row.id }}">View Book</a></td>
-                    <!-- اضافه کردن لینک برای مشاهده مشخصات -->
-                </tr>
-                {% endfor %}
+                        <input type="search" name="search" id="search" value="{{search}}" placeholder="search"
+                            autofocus>
+                        <select name="orderby" id="orderby">
+                            {%if order=='id'%}
+                            <option value="id" selected>Id</option>
+                            {%else%}
+                            <option value="id">Id</option>
+                            {%endif%}
+                            {%if order=='title'%}
+                            <option value="title" selected>Title</option>
+                            {%else%}
+                            <option value="title">Title</option>
+                            {%endif%}
+                            {%if order=='publication_year'%}
+                            <option value="publication_year" selected>Publication year</option>
+                            {%else%}
+                            <option value="publication_year">Publication year</option>
+                            {%endif%}
+                            {%if order=='quantity'%}
+                            <option value="quantity" selected>Quantity</option>
+                            {%else%}
+                            <option value="quantity">Quantity</option>
+                            {%endif%}
+                            {%if order=='address'%}
+                            <option value="address" selected>Address</option>
+                            {%else%}
+                            <option value="address">Address</option>
+                            {%endif%}
+                        </select>
+                    </form>
+                </div>
 
-            </tbody>
-        </table>
-        {% else %}
-        <p>No results found.</p>
-        {% endif %}
-    </div>
+                <div id="result">
+                    {% if rows %}
+                    <table id="members_table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Authors</th>
+                                <th>Publisher</th>
+                                <th>Volume</th>
+                                <th>Publication Year</th>
+                                <th>Category</th>
+                                <th>Address</th>
+                                <th>Quantity</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in rows %}
+                            <tr>
+                                {% for value in row %}
+                                <td>{{ value }}</td>
+                                {% endfor %}
+                                <td><a href="/book/{{ row.id }}">View Book</a></td>
+                                <!-- اضافه کردن لینک برای مشاهده مشخصات -->
+                            </tr>
+                            {% endfor %}
 
-    <div>
-        <a href="/add_book">Add New Book</a>
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p>No results found.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>

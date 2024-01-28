@@ -7,8 +7,8 @@ import logging
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
 
-# log = logging.getLogger('werkzeug')
-# log.setLevel(logging.ERROR)
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
 @app.route('/')
 def index():
