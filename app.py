@@ -255,29 +255,39 @@ def add_member():
         fname = request.form.get('fname') 
         lname = request.form.get('lname') 
         ncode = int(request.form.get('ncode'))
-        number = int(request.form.get('number'))
-        number2 = request.form.get('number2')
+        # number = int(request.form.get('number'))
+        numbers= request.form.getlist('textInputs[]')
+        # number2 = request.form.get('number2')
         query_string=f"""INSERT INTO members (first_name, last_name, national_code, registration_date) 
         VALUES ('{fname}', '{lname}', '{ncode}', CONVERT(date, GETDATE()))""";
         cursor=create_cursor()
         cursor.execute(query_string)
         cursor.connection.commit()
         # flash('Book deleted successfully')
-        query_string=f"""
-                    INSERT INTO phone_numbers (member_id, phone_number)
-                    VALUES ((SELECT id FROM members WHERE national_code='{ncode}'), '{number}');
-                """
-        cursor=create_cursor()
-        cursor.execute(query_string)
-        cursor.connection.commit()
-        if number2:
+        # query_string=f"""
+        #             INSERT INTO phone_numbers (member_id, phone_number)
+        #             VALUES ((SELECT id FROM members WHERE national_code='{ncode}'), '{number}');
+        #         """
+        # cursor=create_cursor()
+        # cursor.execute(query_string)
+        # cursor.connection.commit()
+        # if number2:
+        #     query_string=f"""
+        #             INSERT INTO phone_numbers (member_id, phone_number)
+        #             VALUES ((SELECT id FROM members WHERE national_code='{ncode}'), '{number2}');
+        #         """
+        #     cursor=create_cursor()
+        #     cursor.execute(query_string)
+        #     cursor.connection.commit()
+
+        for number in numbers:
             query_string=f"""
-                    INSERT INTO phone_numbers (member_id, phone_number)
-                    VALUES ((SELECT id FROM members WHERE national_code='{ncode}'), '{number2}');
-                """
+            INSERT INTO phone_numbers (member_id, phone_number)
+            VALUES ((SELECT id FROM members WHERE national_code='{ncode}'), '{number}');""";
             cursor=create_cursor()
             cursor.execute(query_string)
             cursor.connection.commit()
+    
 
         
         return redirect('/members') 

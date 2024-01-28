@@ -54,11 +54,20 @@
                     <label for="ncode">*National Code :</label>
                     <input type="text" name="ncode" id="ncode" required>
                     <br><br>
-                    <label for="number">*Phone Number :</label>
+                    <div style="display: flex; flex-direction: row;">
+                        <label>*Phone Number :</label>
+                        <div id="inputContainer" style="width: min-content; ">
+                            <input type="text" name="textInputs[]" required />
+                        </div>
+
+                        <button type="button" onclick="addInput()" id="new_input" style="margin-left: 1rem;"><img
+                                src="/static/images/plus.png" alt="" class="icon"></button>
+                    </div>
+                    <!-- <label for="number">*Phone Number :</label>
                     <input type="tel" name="number" id="number" required>
                     <br><br>
                     <label for="number2">Phone Number 2 :</label>
-                    <input type="tel" name="number2" id="number2">
+                    <input type="tel" name="number2" id="number2"> -->
                     <br><br>
                     <button type="submit" id="submit">Add Member</button>
                 </form>
@@ -67,6 +76,17 @@
 
     </div>
 
+
+<script>
+    function addInput() {
+        var inputContainer = document.getElementById('inputContainer');
+        var newInput = document.createElement('input');
+        newInput.type = 'text';
+        newInput.style.marginTop = "1rem";
+        newInput.name = 'textInputs[]';
+        inputContainer.appendChild(newInput);
+    }
+</script>
 </body>
 
 

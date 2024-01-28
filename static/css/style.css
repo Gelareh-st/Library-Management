@@ -76,7 +76,7 @@ body {
     border-radius: 1.5rem;
 }
 
-#main h1 {
+#main h1, #main h3 {
     background-color: var(--online);
     width: 100%;
     border-radius: 1.5rem 1.5rem 0 0;
