@@ -74,6 +74,76 @@ def delete_profile():
     cursor.execute(f"DELETE FROM members WHERE members.id={user_id}")
     cursor.commit()
     return redirect('/members')
+
+
+##########################################################################################
+@app.route('/add_member', methods=['GET', 'POST'])
+def add_member():
+    query_string = ""
+    if request.method == 'POST':
+        fname = request.form.get('fname')
+        lname = request.form.get('lname')
+        ncode = int(request.form.get('ncode'))
+        numbers = request.form.getlist('textInputs[]')
+        query_string = f"""INSERT INTO members (first_name, last_name, national_code, registration_date) 
+        VALUES ('{fname}', '{lname}', '{ncode}', CONVERT(date, GETDATE()))"""
+        cursor = create_cursor()
+        cursor.execute(query_string)
+        cursor.connection.commit()
+
+        for number in numbers:
+            query_string = f"""
+            INSERT INTO phone_numbers (member_id, phone_number)
+            VALUES ((SELECT id FROM members WHERE national_code='{ncode}'), '{number}');"""
+            cursor = create_cursor()
+            cursor.execute(query_string)
+            cursor.connection.commit()
+
+        return redirect('/members')
+
+    return render_template('add_member.html')
+
+##########################################################################################
+
+
+@app.route('/edit_member/<int:member_id>', methods=['GET', 'POST'])
+def edit_member(member_id):
+    cursor = create_cursor()
+    fname = cursor.execute(
+        f"SELECT first_name FROM members WHERE members.id='{member_id}'").fetchone()[0]
+    lname = cursor.execute(
+        f"SELECT last_name FROM members WHERE members.id='{member_id}'").fetchone()[0]
+    ncode = cursor.execute(
+        f"SELECT national_code FROM members WHERE members.id='{member_id}'").fetchone()[0]
+    numbers = cursor.execute(
+        f"SELECT phone_number FROM phone_numbers WHERE phone_numbers.member_id='{member_id}'").fetchall()
+
+    if request.method == 'POST':
+        fname = request.form.get('fname')
+        lname = request.form.get('lname')
+        ncode = int(request.form.get('ncode'))
+        numbers = request.form.getlist('textInputs[]')
+        query_string = f"""UPDATE members
+                        SET first_name='{fname}',last_name='{lname}',national_code='{ncode}'
+                        WHERE members.id={member_id} """
+        cursor = create_cursor()
+        cursor.execute(query_string)
+        cursor.connection.commit()
+
+        query_string = f"DELETE FROM phone_numbers WHERE phone_numbers.member_id={member_id};"
+        cursor.execute(query_string)
+        cursor.connection.commit()
+        for number in numbers:
+            if number != '0':
+                query_string = f"""
+                INSERT INTO phone_numbers (member_id, phone_number)
+                VALUES ('{member_id}', '{number}');"""
+                cursor.execute(query_string)
+                cursor.connection.commit()
+
+        return redirect(f"/profile/{member_id}")
+
+    return render_template('edit_member.html', fname=fname, lname=lname, ncode=ncode, numbers=numbers, member_id=member_id)
 ##############################################################################################################################################
 # BOOKS
 ##############################################################################################################################################
@@ -248,141 +318,6 @@ def add_book():
 
         return redirect('/books')
     return render_template('add_book.html', categories=categories)
-##############################################################################################################################################
-# LOANS
-##############################################################################################################################################
-
-
-@app.route('/loans', methods=['GET', 'POST'])
-def loans():
-    order = 'id'
-    today = datetime.date.today()
-    if request.method == 'POST':
-        order = request.form.get('orderby')
-    query_string = f"""SELECT 
-                * 
-            FROM 
-                loans 
-            ORDER BY 
-                {order}"""
-    cursor = create_cursor()
-    cursor.execute(query_string)
-    rows = cursor.fetchall()
-    return render_template('loans.html', rows=rows, order=order, today=today)
-##########################################################################################
-
-
-@app.route('/add_member', methods=['GET', 'POST'])
-def add_member():
-    query_string = ""
-    if request.method == 'POST':
-        fname = request.form.get('fname')
-        lname = request.form.get('lname')
-        ncode = int(request.form.get('ncode'))
-        # number = int(request.form.get('number'))
-        numbers = request.form.getlist('textInputs[]')
-        # number2 = request.form.get('number2')
-        query_string = f"""INSERT INTO members (first_name, last_name, national_code, registration_date) 
-        VALUES ('{fname}', '{lname}', '{ncode}', CONVERT(date, GETDATE()))"""
-        cursor = create_cursor()
-        cursor.execute(query_string)
-        cursor.connection.commit()
-
-        for number in numbers:
-            query_string = f"""
-            INSERT INTO phone_numbers (member_id, phone_number)
-            VALUES ((SELECT id FROM members WHERE national_code='{ncode}'), '{number}');"""
-            cursor = create_cursor()
-            cursor.execute(query_string)
-            cursor.connection.commit()
-
-        return redirect('/members')
-
-    return render_template('add_member.html')
-##########################################################################################
-
-
-@app.route('/new_loan', methods=['GET', 'POST'])
-def new_loan():
-    cursor = create_cursor()
-    books = cursor.execute(
-        f"SELECT title,id FROM books WHERE books.quantity>0").fetchall()
-    members = cursor.execute(
-        f"SELECT first_name,last_name,id FROM members").fetchall()
-
-    if request.method == 'POST':
-        member_id = request.form.get('member_name')
-        book_id = request.form.get('book_name')
-        due_date = request.form.get('due_date')
-        cursor.execute(f"""INSERT INTO loans (book_id,member_id,loan_date,due_date)
-               VALUES ('{book_id}','{member_id}',CONVERT(date, GETDATE()), CAST ('{due_date}' AS DATE))""")
-        cursor.connection.commit()
-        cursor.execute(
-            f"UPDATE books SET quantity = quantity - 1 WHERE id = {book_id};")
-        cursor.connection.commit()
-        return redirect('/loans')
-
-    return render_template('new_loan.html', books=books, members=members)
-
-##########################################################################################
-
-
-@app.route('/return_loan', methods=['POST'])
-def return_loan():
-
-    if request.method == 'POST':
-        loan_id, book_id, member_id = map(
-            int, request.form['loan_id'].split(','))
-        cursor = create_cursor()
-        cursor.execute(
-            f"UPDATE loans SET return_date = CONVERT(date, GETDATE()) WHERE id={loan_id}")
-        cursor.connection.commit()
-        cursor.execute(
-            f"UPDATE books SET quantity = quantity + 1 WHERE id = {book_id};")
-        cursor.connection.commit()
-
-    return redirect(f'/profile/{member_id}')
-##########################################################################################
-
-
-@app.route('/edit_member/<int:member_id>', methods=['GET', 'POST'])
-def edit_member(member_id):
-    cursor = create_cursor()
-    fname = cursor.execute(
-        f"SELECT first_name FROM members WHERE members.id='{member_id}'").fetchone()[0]
-    lname = cursor.execute(
-        f"SELECT last_name FROM members WHERE members.id='{member_id}'").fetchone()[0]
-    ncode = cursor.execute(
-        f"SELECT national_code FROM members WHERE members.id='{member_id}'").fetchone()[0]
-    numbers = cursor.execute(
-        f"SELECT phone_number FROM phone_numbers WHERE phone_numbers.member_id='{member_id}'").fetchall()
-
-    if request.method == 'POST':
-        fname = request.form.get('fname')
-        lname = request.form.get('lname')
-        ncode = int(request.form.get('ncode'))
-        numbers = request.form.getlist('textInputs[]')
-        query_string = f"""UPDATE members
-                        SET first_name='{fname}',last_name='{lname}',national_code='{ncode}'
-                        WHERE members.id={member_id} """
-        cursor = create_cursor()
-        cursor.execute(query_string)
-        cursor.connection.commit()
-
-        query_string = f"DELETE FROM phone_numbers WHERE phone_numbers.member_id={member_id};"
-        cursor.execute(query_string)
-        cursor.connection.commit()
-        for number in numbers:
-            if number != '0':
-                query_string = f"""
-                INSERT INTO phone_numbers (member_id, phone_number)
-                VALUES ('{member_id}', '{number}');"""
-                cursor.execute(query_string)
-                cursor.connection.commit()
-
-        return redirect(f"/profile/{member_id}")
-
-    return render_template('edit_member.html', fname=fname, lname=lname, ncode=ncode, numbers=numbers, member_id=member_id)
 ##########################################################################################
 
 
@@ -418,6 +353,70 @@ def edit_book(book_id):
         return redirect(f"/book/{book_id}")
 
     return render_template('edit_book.html', quantity=quantity, book_id=book_id, floor=floor, corridor=corridor, shelf=shelf)
+##############################################################################################################################################
+# LOANS
+##############################################################################################################################################
+
+
+@app.route('/loans', methods=['GET', 'POST'])
+def loans():
+    order = 'id'
+    today = datetime.date.today()
+    if request.method == 'POST':
+        order = request.form.get('orderby')
+    query_string = f"""SELECT 
+                * 
+            FROM 
+                loans 
+            ORDER BY 
+                {order}"""
+    cursor = create_cursor()
+    cursor.execute(query_string)
+    rows = cursor.fetchall()
+    return render_template('loans.html', rows=rows, order=order, today=today)
+##########################################################################################
+
+
+@app.route('/new_loan', methods=['GET', 'POST'])
+def new_loan():
+    cursor = create_cursor()
+    books = cursor.execute(
+        f"SELECT title,id FROM books WHERE books.quantity>0").fetchall()
+    members = cursor.execute(
+        f"SELECT first_name,last_name,id FROM members").fetchall()
+
+    if request.method == 'POST':
+        member_id = request.form.get('member_name')
+        book_id = request.form.get('book_name')
+        due_date = request.form.get('due_date')
+        cursor.execute(f"""INSERT INTO loans (book_id,member_id,loan_date,due_date)
+               VALUES ('{book_id}','{member_id}',CONVERT(date, GETDATE()), CAST ('{due_date}' AS DATE))""")
+        cursor.connection.commit()
+        cursor.execute(
+            f"UPDATE books SET quantity = quantity - 1 WHERE id = {book_id};")
+        cursor.connection.commit()
+        return redirect('/loans')
+
+    return render_template('new_loan.html', books=books, members=members)
+
+##########################################################################################
+
+
+@app.route('/return_loan', methods=['POST'])
+def return_loan():
+    if request.method == 'POST':
+        loan_id, book_id, member_id = map(
+            int, request.form['loan_id'].split(','))
+        cursor = create_cursor()
+        cursor.execute(
+            f"UPDATE loans SET return_date = CONVERT(date, GETDATE()) WHERE id={loan_id}")
+        cursor.connection.commit()
+        cursor.execute(
+            f"UPDATE books SET quantity = quantity + 1 WHERE id = {book_id};")
+        cursor.connection.commit()
+
+    return redirect(f'/profile/{member_id}')
+
 ##########################################################################################
 
 
